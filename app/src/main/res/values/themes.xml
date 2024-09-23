@@ -6,4 +6,10 @@
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">#233232</item>
     </style>
+
+    <style name="FullScreenDialog" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowFullscreen">true</item>
+    <item name="android:windowIsTranslucent">false</item>
+    <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
