@@ -43,41 +43,66 @@ class DataActivity : AppCompatActivity() {
         buttonCreate.setOnClickListener { showAddNoteDialog() }
     }
 
-    private fun showAddNoteDialog() {
+    fun showAddNoteDialog(note: Note? = null) {
         val addNoteDialog = AddNoteDialogFragment()
+        note?.let { addNoteDialog.setNote(it) } // Set note if updating
         addNoteDialog.listener = object : AddNoteDialogFragment.OnNoteAddedListener {
-            override fun onNoteAdded(english: String, indonesian: String, description: String) {
-                addNoteToDatabase(english, indonesian, description, addNoteDialog) // Pass the dialog
+            override fun onNoteAdded(updatedNote: Note) {
+                if (note == null) {
+                    addNoteToDatabase(updatedNote, addNoteDialog) // Pass dialog reference
+                } else {
+                    updateNoteInDatabase(updatedNote, addNoteDialog) // Pass dialog reference
+                }
             }
         }
         addNoteDialog.show(supportFragmentManager, "AddNoteDialog")
     }
 
-    private fun addNoteToDatabase(english: String, indonesian: String, description: String, dialog: AddNoteDialogFragment) {
+    private fun addNoteToDatabase(note: Note, addNoteDialog: AddNoteDialogFragment) {
         lifecycleScope.launch {
-            val exists = noteDatabase.noteDao().checkEnglishExists(english)
+            val exists = noteDatabase.noteDao().checkEnglishExists(note.english)
 
             if (exists > 0) {
                 Toast.makeText(this@DataActivity, "Note with this English word already exists.", Toast.LENGTH_SHORT).show()
             } else {
-                val newNote = Note(english = english, indonesian = indonesian, description = description)
-                noteDatabase.noteDao().insert(newNote)
-
-                val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
-                itemAdapter.updateNotes(notes)
-
-                // Close the dialog and show success toast
-                dialog.dismiss() // Close the dialog
-                Toast.makeText(this@DataActivity, "Note successfully added!", Toast.LENGTH_SHORT).show() // Show success toast
+                noteDatabase.noteDao().insert(note)
+                refreshNotes()
+                Toast.makeText(this@DataActivity, "Note successfully added!", Toast.LENGTH_SHORT).show()
+                addNoteDialog.dismiss() // Dismiss the passed dialog
             }
+        }
+    }
+
+    private fun updateNoteInDatabase(note: Note, addNoteDialog: AddNoteDialogFragment) {
+        lifecycleScope.launch {
+            val exists = noteDatabase.noteDao().checkOtherEnglishExists(note.english, note.id)
+
+            if (exists > 0) {
+                Toast.makeText(this@DataActivity, "Note with this English word already exists.", Toast.LENGTH_SHORT).show()
+            } else {
+                noteDatabase.noteDao().insert(note) // Use insert with REPLACE strategy to update
+                refreshNotes()
+                Toast.makeText(this@DataActivity, "Note successfully updated!", Toast.LENGTH_SHORT).show()
+                addNoteDialog.dismiss() // Dismiss the passed dialog
+            }
+        }
+    }
+
+    private fun refreshNotes() {
+        lifecycleScope.launch {
+            val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
+            itemAdapter.updateNotes(notes)
         }
     }
 
     fun deleteNoteFromDatabase(note: Note, position: Int) {
         lifecycleScope.launch {
             noteDatabase.noteDao().delete(note) // Delete the note from the database
-            itemAdapter.itemList.removeAt(position) // Remove the note from the adapter's list
-            itemAdapter.notifyItemRemoved(position) // Notify the adapter of the removed item
+            itemAdapter.removeNoteAt(position) // Remove the note from the adapter's list
         }
+    }
+
+    private fun onNoteClicked(note: Note) {
+        showAddNoteDialog(note) // Show dialog with existing note for updating
     }
 }

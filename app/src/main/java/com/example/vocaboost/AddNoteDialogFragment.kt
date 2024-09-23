@@ -10,14 +10,21 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.vocaboost.data.model.Note
 
 class AddNoteDialogFragment : DialogFragment() {
 
     interface OnNoteAddedListener {
-        fun onNoteAdded(english: String, indonesian: String, description: String)
+        fun onNoteAdded(note: Note)
     }
 
     var listener: OnNoteAddedListener? = null
+    private var existingNote: Note? = null
+
+    // Fungsi untuk mengatur catatan yang ada
+    fun setNote(note: Note) {
+        existingNote = note
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -44,17 +51,30 @@ class AddNoteDialogFragment : DialogFragment() {
         val indonesianEditText = view.findViewById<EditText>(R.id.et_indonesian)
         val descriptionEditText = view.findViewById<EditText>(R.id.et_description)
         val saveButton = view.findViewById<Button>(R.id.btn_save)
-        val closeButton = view.findViewById<ImageButton>(R.id.btn_close) // Ubah ke ImageButton
+        val closeButton = view.findViewById<ImageButton>(R.id.btn_close)
+
+        // Jika ada catatan yang ada, isi EditText dengan data
+        existingNote?.let {
+            englishEditText.setText(it.english)
+            indonesianEditText.setText(it.indonesian)
+            descriptionEditText.setText(it.description)
+        }
 
         saveButton.setOnClickListener {
             val english = englishEditText.text.toString()
-            val indonesia = indonesianEditText.text.toString()
+            val indonesian = indonesianEditText.text.toString()
             val description = descriptionEditText.text.toString()
 
             if (english.isNotEmpty()) {
-                listener?.onNoteAdded(english, indonesia, description)
+                val note = existingNote?.copy(
+                    english = english,
+                    indonesian = indonesian,
+                    description = description
+                ) ?: Note(english = english, indonesian = indonesian, description = description)
+
+                listener?.onNoteAdded(note)
             } else {
-                Toast.makeText(requireContext(), "Please fill english fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill in the English field", Toast.LENGTH_SHORT).show()
             }
         }
 

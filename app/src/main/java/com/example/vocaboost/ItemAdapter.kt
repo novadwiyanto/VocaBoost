@@ -13,7 +13,7 @@ import com.example.vocaboost.data.model.Note
 
 class ItemAdapter(
     private val context: Context,
-    private var _itemList: MutableList<Note>, // Use a backing field
+    private var _itemList: MutableList<Note>,
     private val noteDatabase: NoteDatabase
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
@@ -27,8 +27,10 @@ class ItemAdapter(
         val itemEnglish: TextView = itemView.findViewById(R.id.itemEnglish)
         val itemIndonesian: TextView = itemView.findViewById(R.id.itemIndonesian)
         val deleteIcon: ImageView = itemView.findViewById(R.id.iconDelete)
+        val editIcon: ImageView = itemView.findViewById(R.id.iconEdit) // Tambahkan ini
 
         init {
+            // Menangani klik untuk detail
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -37,11 +39,21 @@ class ItemAdapter(
                 }
             }
 
+            // Menangani klik untuk menghapus
             deleteIcon.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val note = itemList[position]
                     (context as? DataActivity)?.deleteNoteFromDatabase(note, position)
+                }
+            }
+
+            // Menangani klik untuk mengedit
+            editIcon.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val note = itemList[position]
+                    (context as? DataActivity)?.showAddNoteDialog(note) // Panggil metode untuk dialog update
                 }
             }
         }
@@ -65,8 +77,17 @@ class ItemAdapter(
         dialog.show((context as FragmentActivity).supportFragmentManager, "DetailDialog")
     }
 
+    fun removeNoteAt(position: Int) {
+        if (position >= 0 && position < itemList.size) {
+            itemList.removeAt(position) // Remove the note from the list
+            notifyItemRemoved(position) // Notify the adapter that the item has been removed
+        }
+    }
+
+
     fun updateNotes(newNotes: MutableList<Note>) {
         itemList = newNotes
         notifyDataSetChanged()
     }
 }
+
