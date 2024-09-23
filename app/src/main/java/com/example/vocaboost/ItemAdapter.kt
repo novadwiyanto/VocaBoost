@@ -1,10 +1,13 @@
 package com.example.vocaboost
 
 import android.content.Context
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +33,20 @@ class ItemAdapter(
         val deleteIcon: ImageView = itemView.findViewById(R.id.iconDelete)
         val editIcon: ImageView = itemView.findViewById(R.id.iconEdit)
 
+
         init {
             // Menyembunyikan ikon jika showIcons bernilai false
             if (!showIcons) {
                 editIcon.visibility = View.GONE
                 deleteIcon.visibility = View.GONE
                 itemIndonesian.visibility = View.GONE
+
+                itemEnglish.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT // Mengubah lebar menjadi match_parent
+                itemEnglish.gravity = Gravity.CENTER
+                itemEnglish.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
+
+                // Menambahkan padding untuk mengatur posisi teks
+                itemEnglish.setPadding(0, 10, 0, 10)
             }
 
             // Menangani klik untuk detail
@@ -75,7 +86,9 @@ class ItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val note = itemList[position]
         holder.itemEnglish.text = note.english
-        holder.itemIndonesian.text = note.indonesian
+
+        val indonesianText = note.indonesian.takeIf { it.isNotEmpty() } ?: "- - - -"
+        holder.itemIndonesian.text = indonesianText
     }
 
     override fun getItemCount(): Int = itemList.size

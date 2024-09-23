@@ -89,15 +89,23 @@
             <Button
                 android:id="@+id/button_export"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="Export"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_corners"
+                android:textSize="12sp" /> <!-- Ukuran teks kecil -->
 
             <Button
                 android:id="@+id/button_import"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Import" />
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Import"
+                android:background="@drawable/rounded_corners"
+                android:textSize="12sp" /> <!-- Ukuran teks kecil -->
         </LinearLayout>
     </LinearLayout>
 

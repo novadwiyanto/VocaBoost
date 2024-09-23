@@ -1,15 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.VocaBoost" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here -->
-        <item name="colorPrimary">#ffffff</item>
-        <item name="colorPrimaryDark">#000000</item>
-        <item name="colorAccent">#233232</item>
+        <item name="colorPrimary">#FFFFFF</item>  <!-- Warna putih untuk toolbar -->
+        <item name="colorPrimaryDark">#000000</item> <!-- Hitam untuk status bar -->
+        <item name="colorAccent">#FF4081</item> <!-- Warna cerah untuk elemen interaktif -->
+        <item name="android:fontFamily">@font/font_custom</item>
     </style>
 
     <style name="FullScreenDialog" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowFullscreen">true</item>
-    <item name="android:windowIsTranslucent">false</item>
-    <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimary">#FFFFFF</item>  <!-- Warna putih untuk toolbar -->
+        <item name="colorPrimaryDark">#000000</item> <!-- Hitam untuk status bar -->
+        <item name="colorAccent">#FF4081</item> <!-- Warna cerah untuk elemen interaktif -->
+        <item name="android:windowFullscreen">false</item> <!-- Mengatur ke false -->
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fontFamily">@font/font_custom</item>
+        <item name="android:fitsSystemWindows">true</item> <!-- Menyesuaikan dengan system windows -->
     </style>
 </resources>
