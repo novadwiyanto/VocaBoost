@@ -73,7 +73,9 @@ dependencies {
     // Dependensi Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.firebase.crashlytics.buildtools)
     kapt("androidx.room:room-compiler:2.6.1")
+    implementation ("com.google.code.gson:gson:2.10.1")
 
     // Coroutines untuk Room
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")

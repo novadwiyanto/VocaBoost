@@ -44,7 +44,7 @@ class ItemAdapter(
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val note = itemList[position]
-                    (context as? DataActivity)?.deleteNoteFromDatabase(note, position)
+                    (context as? DataActivity)?.deleteNoteFromDatabase(note)
                 }
             }
 
