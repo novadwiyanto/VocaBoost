@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 
 class AddNoteDialogFragment : DialogFragment() {
 
-    // Listener untuk menyimpan data note
     interface OnNoteAddedListener {
         fun onNoteAdded(english: String, indonesian: String, description: String)
     }
@@ -34,21 +34,18 @@ class AddNoteDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate layout untuk dialog
         return inflater.inflate(R.layout.fragment_add_note_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Referensi ke elemen layout
         val englishEditText = view.findViewById<EditText>(R.id.et_english)
         val indonesianEditText = view.findViewById<EditText>(R.id.et_indonesian)
         val descriptionEditText = view.findViewById<EditText>(R.id.et_description)
         val saveButton = view.findViewById<Button>(R.id.btn_save)
-        val closeButton = view.findViewById<Button>(R.id.btn_close)
+        val closeButton = view.findViewById<ImageButton>(R.id.btn_close) // Ubah ke ImageButton
 
-        // Action untuk tombol save
         saveButton.setOnClickListener {
             val english = englishEditText.text.toString()
             val indonesia = indonesianEditText.text.toString()
@@ -56,25 +53,23 @@ class AddNoteDialogFragment : DialogFragment() {
 
             if (english.isNotEmpty()) {
                 listener?.onNoteAdded(english, indonesia, description)
-                dismiss()  // Tutup dialog setelah note ditambahkan
+                dismiss()
             } else {
                 Toast.makeText(requireContext(), "Please fill english fields", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Action untuk tombol close
         closeButton.setOnClickListener {
-            dismiss()  // Tutup dialog
+            dismiss()
         }
     }
 
     override fun onStart() {
         super.onStart()
-        // Mengatur ukuran dialog agar full screen
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
     override fun getTheme(): Int {
-        return R.style.FullScreenDialog  // Menggunakan tema full screen
+        return R.style.FullScreenDialog
     }
 }
