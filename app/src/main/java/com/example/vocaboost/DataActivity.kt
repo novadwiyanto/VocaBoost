@@ -1,6 +1,7 @@
 package com.example.vocaboost
 
 import android.os.Bundle
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,9 @@ class DataActivity : AppCompatActivity() {
     private lateinit var itemAdapter: ItemAdapter
     private lateinit var buttonCreate: FloatingActionButton
     private lateinit var noteDatabase: NoteDatabase
+    private lateinit var searchView: SearchView // Declare SearchView
+    private var originalNoteList: List<Note> = emptyList() // To hold the original notes
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,7 @@ class DataActivity : AppCompatActivity() {
         // Load data from the database
         lifecycleScope.launch {
             val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
+            originalNoteList = notes
             itemAdapter = ItemAdapter(this@DataActivity, notes, noteDatabase)
             recyclerView.adapter = itemAdapter
         }
@@ -41,6 +46,30 @@ class DataActivity : AppCompatActivity() {
         // Initialize Floating Action Button
         buttonCreate = findViewById(R.id.fab_create)
         buttonCreate.setOnClickListener { showAddNoteDialog() }
+
+        searchView = findViewById(R.id.searchView)
+        setupSearchView()
+    }
+
+    private fun setupSearchView() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterNotes(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterNotes(query: String?) {
+        val filteredNotes = originalNoteList.filter { note ->
+            note.english.contains(query ?: "", ignoreCase = true) ||
+                    note.indonesian.contains(query ?: "", ignoreCase = true)
+        }
+        itemAdapter.updateNotes(filteredNotes.toMutableList())
     }
 
     fun showAddNoteDialog(note: Note? = null) {
@@ -91,6 +120,7 @@ class DataActivity : AppCompatActivity() {
     private fun refreshNotes() {
         lifecycleScope.launch {
             val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
+            originalNoteList = notes // Update the original list
             itemAdapter.updateNotes(notes)
         }
     }
