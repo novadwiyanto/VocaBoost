@@ -2,6 +2,7 @@ package com.example.vocaboost
 
 import android.os.Bundle
 import android.widget.SearchView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -19,9 +20,9 @@ class DataActivity : AppCompatActivity() {
     private lateinit var itemAdapter: ItemAdapter
     private lateinit var buttonCreate: FloatingActionButton
     private lateinit var noteDatabase: NoteDatabase
-    private lateinit var searchView: SearchView // Declare SearchView
+    private lateinit var searchView: SearchView
+    private lateinit var textViewCount: TextView
     private var originalNoteList: List<Note> = emptyList() // To hold the original notes
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,23 +32,23 @@ class DataActivity : AppCompatActivity() {
         // Initialize database
         noteDatabase = NoteDatabase.getDatabase(this)
 
-        // Setup RecyclerView
+        // Initialize views
         recyclerView = findViewById(R.id.recyclerView)
+        textViewCount = findViewById(R.id.textViewCount) // Initialize TextView for note count
+        searchView = findViewById(R.id.searchView)
+
+        // Setup RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Load data from the database
         lifecycleScope.launch {
-            val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
-            originalNoteList = notes
-            itemAdapter = ItemAdapter(this@DataActivity, notes, noteDatabase)
-            recyclerView.adapter = itemAdapter
+            loadNotes()
         }
 
         // Initialize Floating Action Button
         buttonCreate = findViewById(R.id.fab_create)
         buttonCreate.setOnClickListener { showAddNoteDialog() }
 
-        searchView = findViewById(R.id.searchView)
         setupSearchView()
     }
 
@@ -70,6 +71,19 @@ class DataActivity : AppCompatActivity() {
                     note.indonesian.contains(query ?: "", ignoreCase = true)
         }
         itemAdapter.updateNotes(filteredNotes.toMutableList())
+        updateNoteCount(filteredNotes.size) // Update count after filtering
+    }
+
+    private fun updateNoteCount(count: Int) {
+        textViewCount.text = "Total Notes: $count" // Update the TextView
+    }
+
+    private suspend fun loadNotes() {
+        val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
+        originalNoteList = notes
+        itemAdapter = ItemAdapter(this@DataActivity, notes, noteDatabase)
+        recyclerView.adapter = itemAdapter
+        updateNoteCount(notes.size) // Update count after loading
     }
 
     fun showAddNoteDialog(note: Note? = null) {
@@ -95,7 +109,7 @@ class DataActivity : AppCompatActivity() {
                 Toast.makeText(this@DataActivity, "Note with this English word already exists.", Toast.LENGTH_SHORT).show()
             } else {
                 noteDatabase.noteDao().insert(note)
-                refreshNotes()
+                loadNotes() // Reload notes to update original list and count
                 Toast.makeText(this@DataActivity, "Note successfully added!", Toast.LENGTH_SHORT).show()
                 addNoteDialog.dismiss() // Dismiss the passed dialog
             }
@@ -110,7 +124,7 @@ class DataActivity : AppCompatActivity() {
                 Toast.makeText(this@DataActivity, "Note with this English word already exists.", Toast.LENGTH_SHORT).show()
             } else {
                 noteDatabase.noteDao().insert(note) // Use insert with REPLACE strategy to update
-                refreshNotes()
+                loadNotes() // Reload notes to update original list and count
                 Toast.makeText(this@DataActivity, "Note successfully updated!", Toast.LENGTH_SHORT).show()
                 addNoteDialog.dismiss() // Dismiss the passed dialog
             }
@@ -119,16 +133,15 @@ class DataActivity : AppCompatActivity() {
 
     private fun refreshNotes() {
         lifecycleScope.launch {
-            val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
-            originalNoteList = notes // Update the original list
-            itemAdapter.updateNotes(notes)
+            loadNotes() // Reload notes to update original list and count
         }
     }
 
     fun deleteNoteFromDatabase(note: Note, position: Int) {
         lifecycleScope.launch {
             noteDatabase.noteDao().delete(note) // Delete the note from the database
-            itemAdapter.removeNoteAt(position) // Remove the note from the adapter's list
+            // Load notes again to refresh the list and update the count
+            loadNotes()
         }
     }
 
