@@ -24,20 +24,24 @@
             android:layout_marginTop="10dp"
             android:gravity="center">
 
-            <View
+            <Button
+                android:id="@+id/button_to_home"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/bottom_nav" />
+                android:background="@drawable/bottom_nav"
+                android:textColor="@android:color/white" />
 
-            <View
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/bottom_nav" />
+                android:background="@drawable/bottom_nav"
+                android:textColor="@android:color/white" />
         </LinearLayout>
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
