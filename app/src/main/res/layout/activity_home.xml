@@ -30,7 +30,7 @@
                 android:layout_height="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/bottom_nav"
+                android:background="@drawable/bottom_nav_2"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -42,10 +42,20 @@
                 android:background="@drawable/bottom_nav"
                 android:textColor="@android:color/white" />
         </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical" />
     </LinearLayout>
 
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_create"
+        android:id="@+id/randomiseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:backgroundTint="#383838"
@@ -54,6 +64,5 @@
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/add_button"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -118,7 +118,7 @@ class DataActivity : AppCompatActivity() {
     private suspend fun loadNotes() {
         val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
         originalNoteList = notes
-        itemAdapter = ItemAdapter(this@DataActivity, notes, noteDatabase)
+        itemAdapter = ItemAdapter(this@DataActivity, notes, noteDatabase, true)
         recyclerView.adapter = itemAdapter
         updateNoteCount(notes.size) // Update count after loading
     }

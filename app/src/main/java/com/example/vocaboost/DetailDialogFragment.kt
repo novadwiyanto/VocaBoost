@@ -33,10 +33,18 @@ class DetailDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val note = arguments?.getParcelable<Note>(ARG_NOTE)
 
-        // Set data ke view di sini
         view.findViewById<TextView>(R.id.detailEnglish).text = note?.english
         view.findViewById<TextView>(R.id.detailIndonesian).text = note?.indonesian
-        view.findViewById<TextView>(R.id.detailDescription).text = note?.description
+
+        val detailDescriptionTextView = view.findViewById<TextView>(R.id.detailDescription)
+        detailDescriptionTextView.text = note?.description
+
+        // Sembunyikan TextView jika deskripsi null atau kosong
+        if (note?.description.isNullOrEmpty()) {
+            detailDescriptionTextView.visibility = View.GONE
+        } else {
+            detailDescriptionTextView.visibility = View.VISIBLE
+        }
     }
 
     override fun onStart() {

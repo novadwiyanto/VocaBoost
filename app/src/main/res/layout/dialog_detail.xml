@@ -20,30 +20,33 @@
             android:textStyle="bold"
             android:textColor="@android:color/black" />
 
+
         <TextView
             android:id="@+id/detailIndonesian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="normal"
-            android:layout_marginStart="10dp"
             android:textColor="@android:color/black" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:hint="Description"
             android:layout_marginTop="15dp"
-            android:padding="5dp"
-            android:background="@drawable/rounded_corners">
+            android:textColor="@color/gray" />
+
 
             <TextView
                 android:id="@+id/detailDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/black"
-                android:padding="8dp" />
-        </FrameLayout>
+                android:textColor="@color/black"/>
+
 
     </LinearLayout>
 

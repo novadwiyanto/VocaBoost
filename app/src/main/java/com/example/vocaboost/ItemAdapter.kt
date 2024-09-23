@@ -14,7 +14,8 @@ import com.example.vocaboost.data.model.Note
 class ItemAdapter(
     private val context: Context,
     private var _itemList: MutableList<Note>,
-    private val noteDatabase: NoteDatabase
+    private val noteDatabase: NoteDatabase,
+    private val showIcons: Boolean // Parameter baru untuk kontrol ikon
 ) : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     var itemList: MutableList<Note>
@@ -27,9 +28,16 @@ class ItemAdapter(
         val itemEnglish: TextView = itemView.findViewById(R.id.itemEnglish)
         val itemIndonesian: TextView = itemView.findViewById(R.id.itemIndonesian)
         val deleteIcon: ImageView = itemView.findViewById(R.id.iconDelete)
-        val editIcon: ImageView = itemView.findViewById(R.id.iconEdit) // Tambahkan ini
+        val editIcon: ImageView = itemView.findViewById(R.id.iconEdit)
 
         init {
+            // Menyembunyikan ikon jika showIcons bernilai false
+            if (!showIcons) {
+                editIcon.visibility = View.GONE
+                deleteIcon.visibility = View.GONE
+                itemIndonesian.visibility = View.GONE
+            }
+
             // Menangani klik untuk detail
             itemView.setOnClickListener {
                 val position = adapterPosition
@@ -84,10 +92,8 @@ class ItemAdapter(
         }
     }
 
-
     fun updateNotes(newNotes: MutableList<Note>) {
         itemList = newNotes
         notifyDataSetChanged()
     }
 }
-

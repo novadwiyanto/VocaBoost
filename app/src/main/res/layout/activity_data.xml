@@ -38,7 +38,7 @@
                 android:layout_height="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/bottom_nav"
+                android:background="@drawable/bottom_nav_2"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
