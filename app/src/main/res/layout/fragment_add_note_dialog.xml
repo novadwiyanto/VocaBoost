@@ -37,16 +37,7 @@
             android:layout_weight="1" />
 
         <!-- Button di sebelah kanan -->
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Save"
-            android:background="@android:color/transparent"
-            android:stateListAnimator="@null"
-            android:elevation="0dp"
-            android:textColor="@android:color/black" />
+
 
     </LinearLayout>
 
@@ -120,6 +111,15 @@
             android:gravity="top|start"/>
     </LinearLayout>
 
-
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_corners"
+        android:text="Save"
+        android:textColor="@android:color/black"
+        android:textSize="12sp" />
 
 </LinearLayout>
