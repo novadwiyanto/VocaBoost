@@ -53,7 +53,6 @@ class AddNoteDialogFragment : DialogFragment() {
 
             if (english.isNotEmpty()) {
                 listener?.onNoteAdded(english, indonesia, description)
-                dismiss()
             } else {
                 Toast.makeText(requireContext(), "Please fill english fields", Toast.LENGTH_SHORT).show()
             }

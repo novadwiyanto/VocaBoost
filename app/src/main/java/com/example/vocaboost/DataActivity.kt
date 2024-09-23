@@ -1,90 +1,83 @@
 package com.example.vocaboost
 
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
+import com.example.vocaboost.data.database.NoteDatabase
+import com.example.vocaboost.data.model.Note
 
 class DataActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var itemAdapter: ItemAdapter
-    private lateinit var itemList: List<Item>
-    private lateinit var button_create: FloatingActionButton
-
-    // Item data class implementing Parcelable
-    data class Item(
-        val english: String,
-        val indonesian: String,
-        val description: String
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readString() ?: ""
-        )
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(english)
-            parcel.writeString(indonesian)
-            parcel.writeString(description)
-        }
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        companion object CREATOR : Parcelable.Creator<Item> {
-            override fun createFromParcel(parcel: Parcel): Item {
-                return Item(parcel)
-            }
-
-            override fun newArray(size: Int): Array<Item?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
+    private lateinit var buttonCreate: FloatingActionButton
+    private lateinit var noteDatabase: NoteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_data)
 
-        // Initialize RecyclerView
+        // Initialize database
+        noteDatabase = NoteDatabase.getDatabase(this)
+
+        // Setup RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Populate the item list
-        itemList = listOf(
-            Item("Hello", "Halo", "A greeting."),
-            Item("Thank you", "Terima kasih", "An expression of gratitude."),
-            Item("Goodbye", "Selamat tinggal", "A farewell.")
-            // Add more items as needed
-        )
+        // Load data from the database
+        lifecycleScope.launch {
+            val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
+            itemAdapter = ItemAdapter(this@DataActivity, notes, noteDatabase)
+            recyclerView.adapter = itemAdapter
+        }
 
-        // Set the adapter
-        itemAdapter = ItemAdapter(this, itemList)
-        recyclerView.adapter = itemAdapter
+        // Initialize Floating Action Button
+        buttonCreate = findViewById(R.id.fab_create)
+        buttonCreate.setOnClickListener { showAddNoteDialog() }
+    }
 
-        // Initialize the Floating Action Button
-        button_create = findViewById(R.id.fab_create)
-
-        button_create.setOnClickListener {
-            val addNoteDialog = AddNoteDialogFragment()
-
-            addNoteDialog.listener = object : AddNoteDialogFragment.OnNoteAddedListener {
-                override fun onNoteAdded(english: String, indonesian: String, description: String) {
-                    Log.d("DataActivity", "Note added: Title = $english, Description = $description")
-                    // Here you can add the new note to the list and update the adapter if needed
-                }
+    private fun showAddNoteDialog() {
+        val addNoteDialog = AddNoteDialogFragment()
+        addNoteDialog.listener = object : AddNoteDialogFragment.OnNoteAddedListener {
+            override fun onNoteAdded(english: String, indonesian: String, description: String) {
+                addNoteToDatabase(english, indonesian, description, addNoteDialog) // Pass the dialog
             }
+        }
+        addNoteDialog.show(supportFragmentManager, "AddNoteDialog")
+    }
 
-            addNoteDialog.show(supportFragmentManager, "AddNoteDialog")
+    private fun addNoteToDatabase(english: String, indonesian: String, description: String, dialog: AddNoteDialogFragment) {
+        lifecycleScope.launch {
+            val exists = noteDatabase.noteDao().checkEnglishExists(english)
+
+            if (exists > 0) {
+                Toast.makeText(this@DataActivity, "Note with this English word already exists.", Toast.LENGTH_SHORT).show()
+            } else {
+                val newNote = Note(english = english, indonesian = indonesian, description = description)
+                noteDatabase.noteDao().insert(newNote)
+
+                val notes = noteDatabase.noteDao().getAllNotes().toMutableList()
+                itemAdapter.updateNotes(notes)
+
+                // Close the dialog and show success toast
+                dialog.dismiss() // Close the dialog
+                Toast.makeText(this@DataActivity, "Note successfully added!", Toast.LENGTH_SHORT).show() // Show success toast
+            }
+        }
+    }
+
+    fun deleteNoteFromDatabase(note: Note, position: Int) {
+        lifecycleScope.launch {
+            noteDatabase.noteDao().delete(note) // Delete the note from the database
+            itemAdapter.itemList.removeAt(position) // Remove the note from the adapter's list
+            itemAdapter.notifyItemRemoved(position) // Notify the adapter of the removed item
         }
     }
 }

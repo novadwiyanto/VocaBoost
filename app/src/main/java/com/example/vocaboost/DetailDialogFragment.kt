@@ -6,16 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import com.example.vocaboost.data.model.Note // Pastikan Anda mengimpor Note dari lokasi yang benar
 
 class DetailDialogFragment : DialogFragment() {
 
     companion object {
-        private const val ARG_ITEM = "item"
+        private const val ARG_NOTE = "note"
 
-        fun newInstance(item: DataActivity.Item): DetailDialogFragment {
+        fun newInstance(note: Note): DetailDialogFragment {
             val fragment = DetailDialogFragment()
             val args = Bundle()
-            args.putParcelable(ARG_ITEM, item) // Pastikan DataActivity.Item mengimplementasikan Parcelable
+            args.putParcelable(ARG_NOTE, note) // Pastikan Note mengimplementasikan Parcelable
             fragment.arguments = args
             return fragment
         }
@@ -30,12 +31,12 @@ class DetailDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val item = arguments?.getParcelable<DataActivity.Item>(ARG_ITEM)
+        val note = arguments?.getParcelable<Note>(ARG_NOTE)
 
         // Set data ke view di sini
-        view.findViewById<TextView>(R.id.detailEnglish).text = item?.english
-        view.findViewById<TextView>(R.id.detailIndonesian).text = item?.indonesian
-        view.findViewById<TextView>(R.id.detailDescription).text = item?.indonesian
+        view.findViewById<TextView>(R.id.detailEnglish).text = note?.english
+        view.findViewById<TextView>(R.id.detailIndonesian).text = note?.indonesian
+        view.findViewById<TextView>(R.id.detailDescription).text = note?.description
     }
 
     override fun onStart() {
