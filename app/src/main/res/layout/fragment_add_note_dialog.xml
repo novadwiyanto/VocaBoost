@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@android:color/white">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
     <!-- Input untuk Title -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -110,16 +115,18 @@
             android:minLines="4"
             android:gravity="top|start"/>
     </LinearLayout>
-
-    <Button
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_corners"
-        android:text="Save"
-        android:textColor="@android:color/black"
-        android:textSize="12sp" />
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/black"
+        app:fabSize="normal"
+        app:contentDescription="@string/button_create"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/add_button"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

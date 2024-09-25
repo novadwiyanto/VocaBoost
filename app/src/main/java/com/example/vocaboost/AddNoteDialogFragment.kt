@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.vocaboost.data.model.Note
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class AddNoteDialogFragment : DialogFragment() {
 
@@ -50,7 +51,7 @@ class AddNoteDialogFragment : DialogFragment() {
         val englishEditText = view.findViewById<EditText>(R.id.et_english)
         val indonesianEditText = view.findViewById<EditText>(R.id.et_indonesian)
         val descriptionEditText = view.findViewById<EditText>(R.id.et_description)
-        val saveButton = view.findViewById<Button>(R.id.btn_save)
+        val saveButton = view.findViewById<FloatingActionButton>(R.id.btn_save)
         val closeButton = view.findViewById<ImageButton>(R.id.btn_close)
 
         // Jika ada catatan yang ada, isi EditText dengan data

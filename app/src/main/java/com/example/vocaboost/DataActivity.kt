@@ -11,6 +11,7 @@ import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
@@ -55,7 +56,7 @@ class DataActivity : AppCompatActivity() {
         // Initialize database
         noteDatabase = NoteDatabase.getDatabase(this)
 
-        val buttonToData = findViewById<Button>(R.id.button_to_home)
+        val buttonToData = findViewById<FrameLayout>(R.id.button_to_home)
         buttonToData.setOnClickListener {
             val intent = Intent(this@DataActivity, HomeActivity::class.java)
             startActivity(intent)

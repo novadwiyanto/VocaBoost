@@ -16,15 +16,16 @@ interface NoteDao {
     @Update
     suspend fun update(note: Note)
 
-    @Query("SELECT * FROM notes")
+    @Query("SELECT * FROM notes ORDER BY indonesian ASC, id DESC")
     suspend fun getAllNotes(): List<Note>
 
     @Delete
     suspend fun delete(note: Note)
 
-    @Query("SELECT COUNT(*) FROM notes WHERE english = :english")
+    @Query("SELECT COUNT(*) FROM notes WHERE LOWER(english) = LOWER(:english)")
     suspend fun checkEnglishExists(english: String): Int
 
-    @Query("SELECT COUNT(*) FROM notes WHERE english = :english AND id != :noteId")
+    @Query("SELECT COUNT(*) FROM notes WHERE LOWER(english) = LOWER(:english) AND id != :noteId")
     suspend fun checkOtherEnglishExists(english: String, noteId: Long): Int
+
 }

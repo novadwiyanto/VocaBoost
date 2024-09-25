@@ -8,13 +8,14 @@
     </style>
 
     <style name="FullScreenDialog" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#FFFFFF</item>  <!-- Warna putih untuk toolbar -->
-        <item name="colorPrimaryDark">#000000</item> <!-- Hitam untuk status bar -->
-        <item name="colorAccent">#FF4081</item> <!-- Warna cerah untuk elemen interaktif -->
-        <item name="android:windowFullscreen">false</item> <!-- Mengatur ke false -->
+        <item name="colorPrimary">#FFFFFF</item>  <!-- White color for the toolbar -->
+        <item name="colorPrimaryDark">#000000</item> <!-- Black for the status bar -->
+        <item name="colorAccent">#FF4081</item> <!-- Bright color for interactive elements -->
+        <item name="android:windowFullscreen">true</item> <!-- Set to true for full screen -->
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:fontFamily">@font/font_custom</item>
-        <item name="android:fitsSystemWindows">true</item> <!-- Menyesuaikan dengan system windows -->
+        <item name="android:fitsSystemWindows">true</item> <!-- Adjusts with system windows -->
+        <item name="android:windowSoftInputMode">adjustResize</item> <!-- Resize dialog on keyboard appearance -->
     </style>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +26,7 @@ class HomeActivity : AppCompatActivity() {
 
         noteDatabase = NoteDatabase.getDatabase(this)
 
-        val buttonToData = findViewById<Button>(R.id.button_to_data)
+        val buttonToData = findViewById<FrameLayout>(R.id.button_to_data)
         buttonToData.setOnClickListener {
             val intent = Intent(this@HomeActivity, DataActivity::class.java)
             startActivity(intent)
